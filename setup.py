@@ -11,12 +11,14 @@ setup(
     entry_points={
         'console_scripts': [
             'conduktor = conduktor.__main__:main',
-            'create_tables = conduktor.__main__:create_tables',
+            'migrate = conduktor.__main__:migrate',
         ]
     },
     install_requires=[
         'tornado>=5.1,<6',
         'sqlalchemy>=1.2.10,<1.3',
         'psycopg2>=2.7.5,<3',
+        'validators==0.12.2',
+        'alembic>=1',
     ]
 )

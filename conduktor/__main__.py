@@ -1,3 +1,4 @@
+import alembic.config
 import logging
 import tornado.ioloop
 import tornado.web
@@ -20,8 +21,13 @@ def main():
     app.listen(options.PORT)
     tornado.ioloop.IOLoop.current().start() 
 
-def create_tables():
-    models.BaseModel.metadata.create_all(db.engine)    
+def migrate():
+    args = [
+        '--raiseerr',
+        'upgrade', 'head',
+    ]
+    
+    alembic.config.main(argv=args)
 
 
 if __name__ == "__main__":

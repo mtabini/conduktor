@@ -8,7 +8,7 @@ from tornado.options import options
 engine = create_engine(
     options.DB_DSN,
     encoding='utf-8',
-    echo=True,
+    echo=options.DEBUG,
     pool_recycle=600,
     pool_size=20,
     max_overflow=100
