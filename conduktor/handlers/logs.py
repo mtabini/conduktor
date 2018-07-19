@@ -9,7 +9,11 @@ class URLLogHandler(BaseHandler):
             self.set_status(404, 'Not Found')
             return
 
-        logs = [log.json() for log in url.logs[self.get_offset():self.get_limit()]]
+        try:
+            logs = [log.json() for log in url.logs[self.get_offset():self.get_limit()]]
+        except AssertionError as e:
+            self.report_error(e)
+            return
 
         self.write_json(logs)
 
