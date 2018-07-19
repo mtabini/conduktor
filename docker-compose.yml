@@ -5,6 +5,10 @@ services:
   server:
     environment:
       DB_DSN: postgres://postgres:postgres@postgres/postgres
+      SITE_URL: direktor.example.com
+      GOOGLE_OAUTH_CLIENT_ID: ${DIREKTOR_GOOGLE_OAUTH_CLIENT_ID}
+      GOOGLE_OAUTH_CLIENT_SECRET: ${DIREKTOR_GOOGLE_OAUTH_CLIENT_SECRET}
+      AUTHORIZED_DOMAINS: ${DIREKTOR_GOOGLE_OAUTH_CLIENT_SECRET}
     build:
       context: .
       dockerfile: ./docker/Dockerfile.server

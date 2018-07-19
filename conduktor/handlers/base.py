@@ -1,14 +1,17 @@
+import functools
 import json
 import logging
+import re
 import sys
 
+from tornado.auth import GoogleOAuth2Mixin
 from tornado.escape import json_decode, json_encode
-from tornado.web import RequestHandler
+from tornado.web import RequestHandler, HTTPError
 
 from conduktor.db import session
 
 
-class BaseHandler(RequestHandler):
+class BaseHandler(RequestHandler, GoogleOAuth2Mixin):
     def __init__(self, *args, **kwargs):
         self._db = None
         super().__init__(*args, **kwargs)
@@ -22,6 +25,7 @@ class BaseHandler(RequestHandler):
 
     def prepare(self):
         super().prepare()
+
         self.json_data = None
 
         if self.request.body:
@@ -77,3 +81,15 @@ class BaseHandler(RequestHandler):
         except:
             raise AssertionError('The `limit` parameter must be a positive number less than 100')
 
+
+def authenticated(handler):
+    @functools.wraps(handler)
+    async def auth_handler(self, *args, **kwargs):
+        auth_header = self.request.headers.get('authorization', '').lower().split(' ')
+
+        if len(auth_header) != 2 or auth_header[0] != 'token':
+            raise HTTPError(403)
+
+        return handler(self, *args, **kwargs)
+
+    return auth_handler

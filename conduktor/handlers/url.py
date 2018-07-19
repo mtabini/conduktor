@@ -1,10 +1,11 @@
 from sqlalchemy.exc import IntegrityError
 
-from conduktor.handlers.base import BaseHandler
+from conduktor.handlers.base import BaseHandler, authenticated
 from conduktor.models import URL, URLLog
 
 
 class URLHandler(BaseHandler):
+    @authenticated
     def get(self, url_id=None):
         if url_id:
             url = self.db.query(URL).get(url_id)

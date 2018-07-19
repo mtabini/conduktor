@@ -20,5 +20,6 @@ setup(
         'psycopg2>=2.7.5,<3',
         'validators==0.12.2',
         'alembic>=1',
+        'google>=2.0.1',
     ]
 )
