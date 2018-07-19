@@ -17,12 +17,13 @@ class URLHandler(BaseHandler):
             self.write_json(url.json())
             return
 
-        search_query = '%{}%'.format(self.get_query_argument('search'))
+        search_query = '%{}%'.format(self.get_query_argument('search', ''))
 
         results = [url.json() for url in self.db.query(URL).filter(URL.slug.ilike(search_query))]
 
         self.write_json(results)
 
+    @authenticated
     def put(self, url_id):
         url = self.db.query(URL).get(url_id)
 
@@ -66,6 +67,7 @@ class URLHandler(BaseHandler):
         self.redirect('/_/api/v1/url/{}'.format(url.id))
 
 
+    @authenticated
     def post(self):
         try:
             self.check_for_body_parameters(['slug', 'redirect', 'description'])

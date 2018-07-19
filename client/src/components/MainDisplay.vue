@@ -1,6 +1,6 @@
 <template>
   <v-layout>
-    <v-toolbar color="amber" app absolute clipped-left>
+    <v-toolbar color="light-blue" app absolute clipped-left>
       <span class="title ml-3 mr-5">{{ title }}</span>
       <v-text-field
         solo-inverted
@@ -8,6 +8,8 @@
         hide-details
         label="Search"
         prepend-inner-icon="search"
+        :autofocus="true"
+        v-model="search"
       ></v-text-field>
       <v-spacer></v-spacer>
       <span>{{ userName }}</span>
@@ -16,11 +18,31 @@
     
     <v-content>
       <v-container fluid fill-height class="grey lighten-4">
-        <v-layout justify-center align-center>
-          <v-flex shrink>
-            <v-progress-circular :indeterminate="true" />
-          </v-flex>
-        </v-layout>
+        <v-flex fill-height>
+          <v-list two-line>
+            <template v-for="(item) in rows">
+              <v-list-tile :key="item.slug">
+                <v-list-tile-content>
+                  <v-list-tile-title v-html="item.slug"></v-list-tile-title>
+                  <v-list-tile-sub-title v-html="item.redirect"></v-list-tile-sub-title>
+                </v-list-tile-content>
+                <v-list-tile-action>
+                  <v-flex row>
+                    <span class="caption">{{ item.views }} view<span v-if="item.views != 1">s</span></span>
+                    <v-btn icon ripple>
+                      <v-icon color="grey lighten-1">edit</v-icon>
+                    </v-btn>
+                  </v-flex>
+                </v-list-tile-action>
+              </v-list-tile>
+            </template>
+          </v-list>
+          <mugen-scroll :handler="fetchData" :should-handle="!loading">
+            <v-flex>
+              <v-progress-circular :indeterminate="true" v-if="loading" />
+            </v-flex>
+          </mugen-scroll>
+        </v-flex>
       </v-container>
     </v-content>
 
@@ -31,74 +53,12 @@
       color="pink"
       dark
       fixed
-      @click.stop="dialog = !dialog"
+      @click.stop="toggleDialog()"
     >
       <v-icon>add</v-icon>
     </v-btn>
-    
-    <v-dialog v-model="dialog" width="800px">
-      <v-card>
-        <v-card-title
-          class="grey lighten-4 py-4 title"
-        >
-          Create contact
-        </v-card-title>
-        <v-container grid-list-sm class="pa-4">
-          <v-layout row wrap>
-            <v-flex xs12 align-center justify-space-between>
-              <v-layout align-center>
-                <v-avatar size="40px" class="mr-3">
-                  <img
-                    src="//ssl.gstatic.com/s2/oz/images/sge/grey_silhouette.png"
-                    alt=""
-                  >
-                </v-avatar>
-                <v-text-field
-                  placeholder="Name"
-                ></v-text-field>
-              </v-layout>
-            </v-flex>
-            <v-flex xs6>
-              <v-text-field
-                prepend-icon="business"
-                placeholder="Company"
-              ></v-text-field>
-            </v-flex>
-            <v-flex xs6>
-              <v-text-field
-                placeholder="Job title"
-              ></v-text-field>
-            </v-flex>
-            <v-flex xs12>
-              <v-text-field
-                prepend-icon="mail"
-                placeholder="Email"
-              ></v-text-field>
-            </v-flex>
-            <v-flex xs12>
-              <v-text-field
-                type="tel"
-                prepend-icon="phone"
-                placeholder="(000) 000 - 0000"
-                mask="phone"
-              ></v-text-field>
-            </v-flex>
-            <v-flex xs12>
-              <v-text-field
-                prepend-icon="notes"
-                placeholder="Notes"
-              ></v-text-field>
-            </v-flex>
-          </v-layout>
-        </v-container>
-        <v-card-actions>
-          <v-btn flat color="primary">More</v-btn>
-          <v-spacer></v-spacer>
-          <v-btn flat color="primary" @click="dialog = false">Cancel</v-btn>
-          <v-btn flat @click="dialog = false">Save</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+
+    <url-edit ref="urlEdit" />
   </v-layout>
   <!-- <div id="app">
     <img src="./assets/logo.png">
@@ -107,15 +67,21 @@
 </template>
 
 <script>
+import MugenScroll from 'vue-mugen-scroll';
 import { mapState } from 'vuex';
 import { logout } from '../lib/auth';
 import { LogOut } from '../lib/store';
+import { searchURLs } from '../lib/api';
+import UrlEdit from './UrlEdit';
 
 export default {
   name: 'MainDisplay',
   data: () => ({
     dialog: false,
     title: process.env.APP_TITLE,
+    loading: false,
+    rows: [],
+    search: '',
   }),
   computed: mapState({
     userName: state => state.auth.name,
@@ -124,7 +90,28 @@ export default {
     logout() {
       logout();
       this.$store.commit(LogOut);
+    },
+    async fetchData() {
+      this.loading = true;
+
+      const data = await searchURLs(this.$store.state.auth.token, this.search, this.rows.length);
+      this.rows = this.rows.concat(data);
+
+      this.loading = false;
+    },
+    toggleDialog() {
+      this.$refs.urlEdit.toggle();
     }
+  },
+  watch: {
+    search(val) {
+      this.rows = [];
+      this.fetchData();
+    }
+  },
+  components: {
+    MugenScroll,
+    UrlEdit
   }
 }
 </script>

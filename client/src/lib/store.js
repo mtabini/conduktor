@@ -13,6 +13,16 @@ export const LogOut = 'LogOut';
 const store = new Vuex.Store({
     state:{
         auth: getAuthData(),
+        urls: {
+            rows: [],
+            rowToEdit: {
+                id: 0,
+                slug: '',
+                redirect: '',
+                description: '',
+                active: false,
+            }
+        }
     },
     
     mutations: {

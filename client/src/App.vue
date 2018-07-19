@@ -23,8 +23,8 @@ export default {
     loggedIn: state => state.auth.loggedIn,
   }),
   components: {
-    Login: Login,
-    MainDisplay: MainDisplay
+    Login,
+    MainDisplay
   }
 }
 </script>

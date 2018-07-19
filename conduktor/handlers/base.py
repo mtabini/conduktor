@@ -23,6 +23,9 @@ class BaseHandler(RequestHandler, GoogleOAuth2Mixin):
 
         return self._db
 
+    def options(self, *args, **kwargs):
+        self.set_status(204)
+
     def prepare(self):
         super().prepare()
 
@@ -30,6 +33,9 @@ class BaseHandler(RequestHandler, GoogleOAuth2Mixin):
 
         if self.request.body:
                 self.json_data = json_decode(self.request.body)
+
+        self.set_header('Access-Control-Allow-Origin', '*')
+        self.set_header('Access-Control-Allow-Headers', 'Authorization,Content-Type')
 
     def check_for_body_parameters(self, names):
         for name in names:
@@ -84,8 +90,10 @@ class BaseHandler(RequestHandler, GoogleOAuth2Mixin):
 
 def authenticated(handler):
     @functools.wraps(handler)
-    async def auth_handler(self, *args, **kwargs):
+    def auth_handler(self, *args, **kwargs):
         auth_header = self.request.headers.get('authorization', '').lower().split(' ')
+
+        logging.info(auth_header)
 
         if len(auth_header) != 2 or auth_header[0] != 'token':
             raise HTTPError(403)
