@@ -2,7 +2,7 @@ import datetime
 import re
 import validators
 
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Boolean, true
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, validates
 
@@ -16,6 +16,7 @@ class URL(BaseModel):
     slug = Column(String, nullable=False, unique=True)
     redirect = Column(String(4096), nullable=False)
     description = Column(String, nullable=False)
+    active = Column(Boolean, default=true(), nullable=False)
 
     @validates('slug')
     def validate_slug(self, key, field):
@@ -74,6 +75,7 @@ class URL(BaseModel):
             'slug': self.slug,
             'redirect': self.redirect,
             'description': self.description,
+            'active': self.active,
             'stats': [stat.json() for stat in self.stats[0:12]]
         }
         
@@ -89,8 +91,14 @@ class URLLog(BaseModel):
 
     url = relationship('URL', back_populates='logs')
 
+    def json(self):
+        return {
+            'date_created': self.date_created.timestamp(),
+            'log_info': self.log_info,
+        }
 
-URL.logs = relationship('URLLog', order_by=URLLog.date_created, back_populates='url')
+
+URL.logs = relationship('URLLog', order_by='desc(URLLog.date_created)', back_populates='url')
 
 
 class URLStat(BaseModel):
@@ -110,4 +118,4 @@ class URLStat(BaseModel):
         }
 
 
-URL.stats = relationship('URLStat', order_by='desc(URLStat.date_created)', back_populates='url')
+URL.stats = relationship('URLStat', order_by=URLStat.date_created, back_populates='url')

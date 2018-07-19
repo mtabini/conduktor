@@ -57,23 +57,23 @@ class BaseHandler(RequestHandler):
                 
     def get_offset(self):
         try:
-            offset = int(self.get_query_argument('offset'))
+            offset = int(self.get_query_argument('offset', 0))
 
             if offset < 0:
-                self.report_error('The offset parameter must be a positive number')
+                raise AssertionError('The `limit` parameter must be a positive number less than 100')
 
             return offset
         except:
-            self.report_error('The offset parameter must be a positive number')
+            raise AssertionError('The `offset` parameter must be a positive number')
 
     def get_limit(self):
         try:
-            limit = int(self.get_query_argument('limit'))
+            limit = int(self.get_query_argument('limit', 100))
 
             if limit < 0 or limit > 100:
-                self.report_error('The `limit` parameter must be a positive number less than 100')
+                raise AssertionError('The `limit` parameter must be a positive number less than 100')
 
             return limit
         except:
-            self.report_error('The `limit` parameter must be a positive number less than 100')
+            raise AssertionError('The `limit` parameter must be a positive number less than 100')
 
