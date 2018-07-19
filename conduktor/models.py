@@ -5,7 +5,6 @@ import validators
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, validates
-from tornado.escape import json_encode
 
 
 BaseModel = declarative_base()
@@ -45,13 +44,38 @@ class URL(BaseModel):
 
         return field
 
-    def to_json(self):
-        return json_encode({
+    def record_visit(self, db):
+        db.execute(
+            '''
+                INSERT INTO 
+                    url_stats (
+                        url_id,
+                        date_created,
+                        "count"
+                    )
+                VALUES
+                    (
+                        :url_id,
+                        :date_created,
+                        1
+                    )
+                ON CONFLICT(url_id, date_created)
+                DO UPDATE SET "count" = excluded."count" + 1
+            ''',
+            {
+                'url_id': self.id,
+                'date_created': datetime.date.today().replace(day=1),
+            }
+        )
+
+    def json(self):
+        return {
             'id': self.id,
             'slug': self.slug,
             'redirect': self.redirect,
             'description': self.description,
-        })
+            'stats': [stat.json() for stat in self.stats[0:12]]
+        }
         
 
 
@@ -69,10 +93,21 @@ class URLLog(BaseModel):
 URL.logs = relationship('URLLog', order_by=URLLog.date_created, back_populates='url')
 
 
-class URLStats(BaseModel):
+class URLStat(BaseModel):
     __tablename__ = 'url_stats'
 
     id = Column(Integer, primary_key=True)
     url_id = Column(Integer, ForeignKey('urls.id'))
     date_created = Column(DateTime, default=datetime.datetime.utcnow)
     count = Column(Integer, default=0, nullable=False)
+
+    url = relationship('URL', back_populates='stats')
+
+    def json(self):
+        return {
+            'date_created': self.date_created.timestamp(),
+            'count': self.count,
+        }
+
+
+URL.stats = relationship('URLStat', order_by='desc(URLStat.date_created)', back_populates='url')

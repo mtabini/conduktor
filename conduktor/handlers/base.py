@@ -1,5 +1,6 @@
 import json
 import logging
+import sys
 
 from tornado.escape import json_decode, json_encode
 from tornado.web import RequestHandler
@@ -54,3 +55,25 @@ class BaseHandler(RequestHandler):
             finally:
                 session.remove()
                 
+    def get_offset(self):
+        try:
+            offset = int(self.get_query_argument('offset'))
+
+            if offset < 0:
+                self.report_error('The offset parameter must be a positive number')
+
+            return offset
+        except:
+            self.report_error('The offset parameter must be a positive number')
+
+    def get_limit(self):
+        try:
+            limit = int(self.get_query_argument('limit'))
+
+            if limit < 0 or limit > 100:
+                self.report_error('The `limit` parameter must be a positive number less than 100')
+
+            return limit
+        except:
+            self.report_error('The `limit` parameter must be a positive number less than 100')
+

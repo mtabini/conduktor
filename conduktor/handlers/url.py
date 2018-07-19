@@ -5,14 +5,22 @@ from conduktor.models import URL, URLLog
 
 
 class URLHandler(BaseHandler):
-    def get(self, url_id):
-        url = self.db.query(URL).get(url_id)
+    def get(self, url_id=None):
+        if url_id:
+            url = self.db.query(URL).get(url_id)
 
-        if not url:
-            self.set_status(404, 'Not Found')
-            return
+            if not url:
+                self.set_status(404, 'Not Found')
+                return
         
-        self.write(url.to_json())
+            self.write_json(url.json())
+            return
+
+        search_query = '%{}%'.format(self.get_query_argument('search'))
+
+        results = [url.json() for url in self.db.query(URL).filter(URL.slug.ilike(search_query))]
+
+        self.write_json(results)
 
     def post(self):
         try:

@@ -7,7 +7,9 @@ from conduktor.models import URL
 class RedirectHandler(BaseHandler):
     def get(self, slug):
         try:
-            url = self.db.query(URL.redirect).filter(URL.slug==slug.lower()).one()
+            url = self.db.query(URL).filter(URL.slug==slug.lower()).one()
+            url.record_visit(self.db)
+
             self.redirect(url.redirect)
         except NoResultFound:
             self.set_status(404, reason='Not Found')
