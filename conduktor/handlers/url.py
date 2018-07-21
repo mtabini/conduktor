@@ -23,9 +23,9 @@ class URLHandler(BaseHandler):
 
         search_query = '%{}%'.format(self.get_query_argument('search', ''))
 
-        results = [url.json() for url in self.db.query(URL).filter(URL.slug.ilike(search_query))]
+        results = self.db.query(URL).filter(URL.slug.ilike(search_query)).offset(self.get_offset()).limit(self.get_limit())
 
-        self.write_json(results)
+        self.write_json([url.json() for url in results])
 
     @authenticated
     def put(self, url_id):

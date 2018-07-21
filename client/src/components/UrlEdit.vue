@@ -2,12 +2,11 @@
   <v-dialog v-model="show" :persistent="true" width="800px">
     <v-card>
       <v-form v-model="canSubmit" ref="form">
-        <v-card-title
-          class="grey lighten-4 py-4 title"
-        >
+        <v-card-title class="grey lighten-4 py-4 title">
           <span v-if="id == 0">Create URL</span>
           <span v-else>Update URL</span>
         </v-card-title>
+
         <v-container grid-list-sm class="pa-4">
             <v-layout row wrap>
               <v-flex xs12 align-center justify-space-between>
@@ -41,6 +40,7 @@
               </v-flex>
             </v-layout>
         </v-container>
+        
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn flat color="primary" @click="show = false">Cancel</v-btn>

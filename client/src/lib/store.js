@@ -13,7 +13,7 @@ export const LogOut = 'LogOut';
 export const SetURLs = 'SetURLs';
 export const AddURLs = 'AddURLs';
 export const UpdateURL = 'UpdateURL';
-export const SetURLToEdit = 'SetURLToEdit';
+export const SetURLToEdit = '';
 
 const store = new Vuex.Store({
     state:{

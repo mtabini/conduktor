@@ -18,30 +18,7 @@
     
     <v-content>
       <v-container fluid fill-height class="grey lighten-4">
-        <v-flex fill-height>
-          <v-card>
-            <v-list two-line>
-              <template v-for="(item, index) in rows">
-                <v-list-tile @click="editURL(item.id)" :key="item.slug">
-                  <v-list-tile-content>
-                    <v-list-tile-title v-html="item.slug"></v-list-tile-title>
-                    <v-list-tile-sub-title v-html="item.redirect"></v-list-tile-sub-title>
-                  </v-list-tile-content>
-                  <v-list-tile-action>
-                    <v-flex row>
-                      <span class="caption">{{ item.views }} view<span v-if="item.views != 1">s</span></span>
-                    </v-flex>
-                  </v-list-tile-action>
-                </v-list-tile>
-                <v-divider :key="index" />
-              </template>
-            </v-list>
-          </v-card>
-          <v-flex class="text-xs-center pt-3">
-            <v-progress-circular v-if="loading" :indeterminate="true"/>
-            <span @click="fetchData()" v-else>Load more…</span>
-          </v-flex>
-        </v-flex>
+        <URLList :search="search" v-on:edit="editURL" />
       </v-container>
     </v-content>
 
@@ -68,9 +45,10 @@
 <script>
 import { mapState } from 'vuex';
 import { logout } from '../lib/auth';
-import { LogOut, SetURLs, AddURLs, SetURLToEdit } from '../lib/store';
-import { searchURLs } from '../lib/api';
+import { LogOut } from '../lib/store';
+
 import UrlEdit from './UrlEdit';
+import URLList from './URLList';
 
 export default {
   name: 'MainDisplay',
@@ -80,39 +58,25 @@ export default {
     loading: false,
     search: '',
   }),
+
   computed: mapState({
     userName: state => state.auth.name,
-    rows: state => state.urls,
   }),
+
   methods: {
     logout() {
       logout();
       this.$store.commit(LogOut);
     },
-    async fetchData(reset=false) {
-      this.loading = true;
 
-      const data = await searchURLs(this.$store.state.auth.token, this.search, this.rows.length);
-
-      if (reset) {
-        this.$store.commit(SetURLs, data)
-      } else {
-        this.$store.commit(AddURLs, data)
-      }
-
-      this.loading = false;
-    },
     editURL(urlId) {
-      this.$refs.urlEdit.toggle(urlId);
-    }
+      console.log(urlId);
+    },
   },
-  watch: {
-    search(val) {
-      this.fetchData(true);
-    }
-  },
+
   components: {
-    UrlEdit
+    URLList,
+    UrlEdit,
   }
 }
 </script>

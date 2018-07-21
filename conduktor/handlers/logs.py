@@ -10,7 +10,7 @@ class URLLogHandler(BaseHandler):
             return
 
         try:
-            logs = [log.json() for log in url.logs[self.get_offset():self.get_limit()]]
+            logs = [log.json() for log in url.logs.offset(self.get_offset()).limit(self.get_limit())]
         except AssertionError as e:
             self.report_error(e)
             return

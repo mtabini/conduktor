@@ -17,21 +17,24 @@ async function apiCall(token, method, url, query=null, body=null) {
     });
 }
 
-export async function searchURLs(token, search, limit=0, offset=100) {
+export async function searchURLs(token, search, offset=0, limit=100) {
     const result = await apiCall(
         token, 
         'GET', 
         '/_/api/v1/url',
         {
             search: search,
-            limit: limit,
             offset: offset,
+            limit: limit,
         }
     );
 
     result.data.forEach(row => row.views = row.stats.reduce((a, b) => a + b.count, 0));
 
-    return result.data;
+    return {
+        rows: result.data,
+        hasMore: result.data.length >= limit,
+    };
 }
 
 export async function createURL(token, urlObject) {
