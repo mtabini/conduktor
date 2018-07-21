@@ -19,29 +19,28 @@
     <v-content>
       <v-container fluid fill-height class="grey lighten-4">
         <v-flex fill-height>
-          <v-list two-line>
-            <template v-for="(item) in rows">
-              <v-list-tile :key="item.slug">
-                <v-list-tile-content>
-                  <v-list-tile-title v-html="item.slug"></v-list-tile-title>
-                  <v-list-tile-sub-title v-html="item.redirect"></v-list-tile-sub-title>
-                </v-list-tile-content>
-                <v-list-tile-action>
-                  <v-flex row>
-                    <span class="caption">{{ item.views }} view<span v-if="item.views != 1">s</span></span>
-                    <v-btn icon ripple>
-                      <v-icon color="grey lighten-1">edit</v-icon>
-                    </v-btn>
-                  </v-flex>
-                </v-list-tile-action>
-              </v-list-tile>
-            </template>
-          </v-list>
-          <mugen-scroll :handler="fetchData" :should-handle="!loading">
-            <v-flex>
-              <v-progress-circular :indeterminate="true" v-if="loading" />
-            </v-flex>
-          </mugen-scroll>
+          <v-card>
+            <v-list two-line>
+              <template v-for="(item, index) in rows">
+                <v-list-tile @click="editURL(item.id)" :key="item.slug">
+                  <v-list-tile-content>
+                    <v-list-tile-title v-html="item.slug"></v-list-tile-title>
+                    <v-list-tile-sub-title v-html="item.redirect"></v-list-tile-sub-title>
+                  </v-list-tile-content>
+                  <v-list-tile-action>
+                    <v-flex row>
+                      <span class="caption">{{ item.views }} view<span v-if="item.views != 1">s</span></span>
+                    </v-flex>
+                  </v-list-tile-action>
+                </v-list-tile>
+                <v-divider :key="index" />
+              </template>
+            </v-list>
+          </v-card>
+          <v-flex class="text-xs-center pt-3">
+            <v-progress-circular v-if="loading" :indeterminate="true"/>
+            <span @click="fetchData()" v-else>Load more…</span>
+          </v-flex>
         </v-flex>
       </v-container>
     </v-content>
@@ -53,7 +52,7 @@
       color="pink"
       dark
       fixed
-      @click.stop="toggleDialog()"
+      @click.stop="editURL(null)"
     >
       <v-icon>add</v-icon>
     </v-btn>
@@ -67,10 +66,9 @@
 </template>
 
 <script>
-import MugenScroll from 'vue-mugen-scroll';
 import { mapState } from 'vuex';
 import { logout } from '../lib/auth';
-import { LogOut } from '../lib/store';
+import { LogOut, SetURLs, AddURLs, SetURLToEdit } from '../lib/store';
 import { searchURLs } from '../lib/api';
 import UrlEdit from './UrlEdit';
 
@@ -80,37 +78,40 @@ export default {
     dialog: false,
     title: process.env.APP_TITLE,
     loading: false,
-    rows: [],
     search: '',
   }),
   computed: mapState({
     userName: state => state.auth.name,
+    rows: state => state.urls,
   }),
   methods: {
     logout() {
       logout();
       this.$store.commit(LogOut);
     },
-    async fetchData() {
+    async fetchData(reset=false) {
       this.loading = true;
 
       const data = await searchURLs(this.$store.state.auth.token, this.search, this.rows.length);
-      this.rows = this.rows.concat(data);
+
+      if (reset) {
+        this.$store.commit(SetURLs, data)
+      } else {
+        this.$store.commit(AddURLs, data)
+      }
 
       this.loading = false;
     },
-    toggleDialog() {
-      this.$refs.urlEdit.toggle();
+    editURL(urlId) {
+      this.$refs.urlEdit.toggle(urlId);
     }
   },
   watch: {
     search(val) {
-      this.rows = [];
-      this.fetchData();
+      this.fetchData(true);
     }
   },
   components: {
-    MugenScroll,
     UrlEdit
   }
 }

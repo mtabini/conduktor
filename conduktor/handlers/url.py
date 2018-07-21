@@ -5,6 +5,10 @@ from conduktor.models import URL, URLLog
 
 
 class URLHandler(BaseHandler):
+    def prepare(self):
+        super().prepare()
+        self.set_header('Access-Control-Allow-Methods', 'GET,POST,PUT,OPTIONS')
+
     @authenticated
     def get(self, url_id=None):
         if url_id:
@@ -63,9 +67,11 @@ class URLHandler(BaseHandler):
 
                 url.active = active
 
-        self.db.commit()
-        self.redirect('/_/api/v1/url/{}'.format(url.id))
-
+        try:
+            self.db.commit()
+            self.set_status(201)
+        except IntegrityError as e:
+            self.report_error('This slug already exists. Please change to a different one and try again. To edit the redirect with this slug, search for it from the main screen.')
 
     @authenticated
     def post(self):
@@ -91,4 +97,4 @@ class URLHandler(BaseHandler):
         except AssertionError as e:
             self.report_error(e)
         except IntegrityError as e:
-            self.report_error('Duplicate slug')
+            self.report_error('This slug already exists. Please change to a different one and try again. To edit the redirect with this slug, search for it from the main screen.')

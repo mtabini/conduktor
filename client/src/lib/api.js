@@ -35,13 +35,21 @@ export async function searchURLs(token, search, limit=0, offset=100) {
 }
 
 export async function createURL(token, urlObject) {
-    const result = await apiCall(
+    return await apiCall(
         token,
         'POST',
         '/_/api/v1/url',
         null,
         urlObject
     );
+}
 
-    console.log(result);
+export async function updateURL(token, urlObject) {
+    return await apiCall(
+        token,
+        'PUT',
+        `/_/api/v1/url/${urlObject.id}`,
+        null,
+        urlObject
+    );
 }
