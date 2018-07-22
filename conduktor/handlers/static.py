@@ -7,9 +7,6 @@ from conduktor.handlers import base
 
 class StaticHandler(StaticFileHandler, GoogleOAuth2Mixin): 
     async def get(self, path, include_body=True):
-
-        
-
         return await super().get(path, include_body)
 
 

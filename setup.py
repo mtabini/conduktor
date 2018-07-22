@@ -20,6 +20,7 @@ setup(
         'psycopg2>=2.7.5,<3',
         'validators==0.12.2',
         'alembic>=1',
-        'google>=2.0.1',
+        'requests>=2.19.1',
+        'google-auth>=1.5',
     ]
 )

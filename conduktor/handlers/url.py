@@ -42,21 +42,21 @@ class URLHandler(BaseHandler):
             slug = self.json_data['slug']
 
             if slug != url.slug:
-                url.logs.append(URLLog(log_info='System has changed the slug to `{}`'.format(slug)))
+                url.logs.append(URLLog(log_info='{} has changed the slug to `{}`'.format(self.user_name, slug)))
                 url.slug = slug
 
         if 'redirect' in self.json_data:
             redirect = self.json_data['redirect']
 
             if redirect != url.redirect:
-                url.logs.append(URLLog(log_info='System has changed the redirect to `{}`'.format(redirect)))
+                url.logs.append(URLLog(log_info='{} has changed the redirect to `{}`'.format(self.user_name, redirect)))
                 url.redirect = redirect
 
         if 'description' in self.json_data:
             description = self.json_data['description']
 
             if description != url.description:
-                url.logs.append(URLLog(log_info='System has changed the description to `{}`'.format(description)))
+                url.logs.append(URLLog(log_info='{} has changed the description to `{}`'.format(self.user_name, description)))
                 url.description = description
 
         if 'active' in self.json_data:
@@ -64,9 +64,9 @@ class URLHandler(BaseHandler):
 
             if active != url.active:
                 if active:
-                    url.logs.append(URLLog(log_info='System has reactivated the URL forward'))
+                    url.logs.append(URLLog(log_info='{} has reactivated the URL forward'.format(self.user_name)))
                 else:
-                    url.logs.append(URLLog(log_info='System has deactivated the URL forward'))
+                    url.logs.append(URLLog(log_info='{} has deactivated the URL forward'.format(self.user_name)))
 
                 url.active = active
 

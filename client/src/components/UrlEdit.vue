@@ -28,8 +28,8 @@
       <v-card>
         <v-form v-model="canSubmit" ref="form">
           <v-card-title class="grey lighten-4 py-4 title">
-            <span v-if="id == 0">Create URL</span>
-            <span v-else>Update URL</span>
+            <span v-if="id == 0">Create Redirect</span>
+            <span v-else>Update Redirect</span>
           </v-card-title>
 
           <v-container grid-list-sm class="pa-4">

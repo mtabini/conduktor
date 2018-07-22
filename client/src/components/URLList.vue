@@ -28,7 +28,7 @@
             </v-list-tile-content>
             <v-list-tile-action>
               <v-flex row>
-                <v-chip v-if="!item.active" label small disabled>Disabled</v-chip>
+                <v-chip v-if="!item.active" label small disabled>Inactive</v-chip>
                 <span class="caption">{{ item.views }} view<span v-if="item.views != 1">s</span></span>
               </v-flex>
             </v-list-tile-action>

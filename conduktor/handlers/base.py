@@ -4,16 +4,19 @@ import logging
 import re
 import sys
 
-from tornado.auth import GoogleOAuth2Mixin
+from google.oauth2 import id_token
+from google.auth.transport import requests
+from tornado.options import options
 from tornado.escape import json_decode, json_encode
 from tornado.web import RequestHandler, HTTPError
 
 from conduktor.db import session
 
 
-class BaseHandler(RequestHandler, GoogleOAuth2Mixin):
+class BaseHandler(RequestHandler):
     def __init__(self, *args, **kwargs):
         self._db = None
+        self.user_name = None
         super().__init__(*args, **kwargs)
 
     @property
@@ -87,15 +90,34 @@ class BaseHandler(RequestHandler, GoogleOAuth2Mixin):
         except:
             raise AssertionError('The `limit` parameter must be a positive number less than 100')
 
+import base64
 
 def authenticated(handler):
     @functools.wraps(handler)
     def auth_handler(self, *args, **kwargs):
-        auth_header = self.request.headers.get('authorization', '').lower().split(' ')
+        auth_header = self.request.headers.get('authorization', '').split(' ')
 
-        logging.info(auth_header)
+        if len(auth_header) != 2 or auth_header[0].lower() != 'token':
+            raise HTTPError(403)
 
-        if len(auth_header) != 2 or auth_header[0] != 'token':
+        token = auth_header[1]
+
+        try:
+            idinfo = id_token.verify_oauth2_token(token, requests.Request(), options.GOOGLE_OAUTH_CLIENT_ID)
+
+            if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
+                raise HTTPError(403)
+
+            authorized_domains = options.AUTHORIZED_DOMAINS.split(',')
+
+            if idinfo['hd'] not in authorized_domains:
+                raise HTTPError(403)
+
+            if idinfo['aud'] != options.GOOGLE_OAUTH_CLIENT_ID:
+                raise HTTPError(403)
+
+            self.user_name = idinfo['name']
+        except:
             raise HTTPError(403)
 
         return handler(self, *args, **kwargs)
