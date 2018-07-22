@@ -56,3 +56,11 @@ export async function updateURL(token, urlObject) {
         urlObject
     );
 }
+
+export async function getURL(token, urlId) {
+    return await apiCall(
+        token,
+        'GET',
+        `/_/api/v1/url/${urlId}`,
+    );
+}

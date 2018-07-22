@@ -15,13 +15,19 @@ export default new Router({
       
       children: [
         {
+          name: 'newUrl',
           path: 'new',
           component: UrlEdit,
+          props: { urlId: 0},
         },
 
         {
-          path: 'edit/:id',
+          name: 'editUrl',
+          path: 'edit/:urlId',
           component: UrlEdit,
+          props: (route) => ({
+            urlId: Number(route.params.urlId),
+          }),
         },
       ],
     },

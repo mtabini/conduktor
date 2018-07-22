@@ -34,12 +34,8 @@
       <v-icon>add</v-icon>
     </v-btn>
 
-    <url-edit ref="urlEdit" />
+    <router-view></router-view>
   </v-layout>
-  <!-- <div id="app">
-    <img src="./assets/logo.png">
-    <router-view/>
-  </div> -->
 </template>
 
 <script>
@@ -47,7 +43,6 @@ import { mapState } from 'vuex';
 import { logout } from '../lib/auth';
 import { LogOut } from '../lib/store';
 
-import UrlEdit from './UrlEdit';
 import URLList from './URLList';
 
 export default {
@@ -70,13 +65,16 @@ export default {
     },
 
     editURL(urlId) {
-      console.log(urlId);
+      if (urlId) {
+        this.$router.push({ name: 'editUrl', params: { urlId: urlId } });
+      } else {
+        this.$router.push({ name: 'newUrl' });
+      }
     },
   },
 
   components: {
     URLList,
-    UrlEdit,
   }
 }
 </script>
