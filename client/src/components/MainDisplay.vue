@@ -18,7 +18,7 @@
     
     <v-content>
       <v-container fluid fill-height class="grey lighten-4">
-        <URLList :search="search" v-on:edit="editURL" />
+        <UrlList :search="search" v-on:edit="editURL" />
       </v-container>
     </v-content>
 
@@ -43,7 +43,7 @@ import { mapState } from 'vuex';
 import { logout } from '../lib/auth';
 import { LogOut } from '../lib/store';
 
-import URLList from './URLList';
+import UrlList from './UrlList';
 
 export default {
   name: 'MainDisplay',
@@ -74,7 +74,7 @@ export default {
   },
 
   components: {
-    URLList,
+    UrlList,
   }
 }
 </script>

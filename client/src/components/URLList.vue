@@ -7,7 +7,16 @@
 
     <v-card>
       <v-list two-line>
+        <v-list-tile v-if="rows.length == 0">
+          <v-list-tile-content>
+            <v-list-tile-sub-title>
+              No results found.
+            </v-list-tile-sub-title>
+          </v-list-tile-content>
+        </v-list-tile>
+
         <template v-for="(item, index) in rows">
+          <v-divider v-if="index != 0" :key="index" />
           <v-list-tile @click="editURL(item.id)" :key="item.slug">
             <v-list-tile-content>
               <v-list-tile-title>
@@ -24,14 +33,13 @@
               </v-flex>
             </v-list-tile-action>
           </v-list-tile>
-          <v-divider :key="index" />
         </template>
       </v-list>
     </v-card>
     
     <v-flex class="text-xs-center pt-3">
       <v-progress-circular v-if="loading" :indeterminate="true"/>
-      <span @click="fetchData()" v-if="!loading && loadMore">Load more…</span>
+      <span @click="fetchData()" v-if="errorMessage == '' && !loading && loadMore">Load more…</span>
     </v-flex>
   </v-flex>
 </template>
@@ -44,7 +52,7 @@ import { searchURLs } from '../lib/api';
 const EditUrlEvent = 'edit';
 
 export default {
-  name: 'URLList',
+  name: 'UrlList',
 
   props: {
     search: String,
@@ -54,10 +62,11 @@ export default {
     loading: false,
     loadMore: true,
     errorMessage: '',
+    searchDebounce: null,
   }),
 
   computed: mapState({
-    rows: state => state.urls,
+    rows: state => Object.values(state.urls).sort(((l, r) => l.slug.toLowerCase().localeCompare(r.slug.toLowerCase()))),
   }),
 
   methods: {
@@ -66,8 +75,7 @@ export default {
       this.errorMessage = '';
 
       try {
-        const data = await searchURLs(this.$store.state.auth.token, this.search, Object.keys(this.rows).length);
-
+        const data = await searchURLs(this.$store.state.auth.token, this.search, reset ? 0 : Object.keys(this.rows).length);
 
         if (reset) {
           this.$store.commit(SetURLs, data.rows)
@@ -90,7 +98,17 @@ export default {
 
   watch: {
     search(val) {
-      this.fetchData(true);
+      if (this.searchDebounce) {
+        clearTimeout(this.searchDebounce);
+      }
+
+      this.searchDebounce = setTimeout(
+        () => {
+          this.fetchData(true);
+          this.searchDebounce = null;
+        },
+        500
+      )
     }
   },
 

@@ -77,9 +77,10 @@
           </v-container>
           
           <v-card-actions>
+            <v-btn flat @click="viewLogs()" :disabled="saving">Activity Log</v-btn>
             <v-spacer></v-spacer>
-            <v-btn color="primary" @click="cancel()" :disabled="saving">Cancel</v-btn>
-            <v-btn :disabled="!canSubmit || saving" @click.stop="save()" :loading="saving">
+            <v-btn flat color="primary" @click="cancel()" :disabled="saving">Cancel</v-btn>
+            <v-btn flat :disabled="!canSubmit || saving" @click.stop="save()" :loading="saving">
               <span v-if="id == 0">Create</span>
               <span v-else>Update</span>
             </v-btn>
@@ -93,7 +94,6 @@
 <script>
 import { createURL, updateURL, getURL } from '../lib/api';
 import { UpdateURL } from '../lib/store';
-import { mapState } from 'vuex';
 
 export default {
   name: 'UrlEdit',
@@ -120,7 +120,7 @@ export default {
     active: true,
   }),
 
-  async mounted() {
+  mounted() {
     this.begin();
   },
 
@@ -162,6 +162,10 @@ export default {
 
     cancel() {
       this.$router.push('/');
+    },
+
+    viewLogs() {
+      this.$router.push({ name: 'viewUrlLogs', params: { urlId: this. urlId } })
     },
 
     async load() {

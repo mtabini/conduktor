@@ -23,7 +23,10 @@ class URLHandler(BaseHandler):
 
         search_query = '%{}%'.format(self.get_query_argument('search', ''))
 
-        results = self.db.query(URL).filter(URL.slug.ilike(search_query)).offset(self.get_offset()).limit(self.get_limit())
+        offset = self.get_offset()
+        limit = self.get_limit()
+
+        results = self.db.query(URL).filter(URL.slug.ilike(search_query)).offset(offset).limit(limit)
 
         self.write_json([url.json() for url in results])
 

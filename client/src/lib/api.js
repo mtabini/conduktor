@@ -68,3 +68,11 @@ export async function getURL(token, urlId) {
 
     return result;
 }
+
+export async function getURLLogs(token, urlId) {
+    return await apiCall(
+        token,
+        'GET',
+        `/_/api/v1/url/${urlId}/logs`,
+    );
+}

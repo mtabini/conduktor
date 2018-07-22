@@ -98,7 +98,7 @@ class URLLog(BaseModel):
         }
 
 
-URL.logs = relationship('URLLog', order_by='desc(URLLog.date_created)', back_populates='url')
+URL.logs = relationship('URLLog', order_by='desc(URLLog.date_created)', lazy='dynamic', back_populates='url')
 
 
 class URLStat(BaseModel):
