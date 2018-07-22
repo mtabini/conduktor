@@ -40,7 +40,6 @@ const store = new Vuex.Store({
         },
 
         [UpdateURL](state, url) {
-            console.log(url);
             Vue.set(state.urls, url.id, url);
         },
     },

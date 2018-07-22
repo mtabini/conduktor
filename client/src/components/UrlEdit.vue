@@ -144,6 +144,7 @@ export default {
       this.redirect = '';
       this.description = '';
       this.active = true;
+      this.views = 0;
 
       this.hasLoadError = false;
       this.loading = !!this.urlId;
@@ -173,6 +174,7 @@ export default {
         this.redirect = url.redirect;
         this.description = url.description;
         this.active = url.active;
+        this.views = url.views;
 
         this.loading = false;
         this.show = true;
@@ -232,7 +234,9 @@ export default {
               description: this.description,
               active: this.active,
             }
-          )
+          );
+
+          newUrl.views = this.views;
         } else {
           const data = await createURL(
             token,

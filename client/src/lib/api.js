@@ -58,9 +58,13 @@ export async function updateURL(token, urlObject) {
 }
 
 export async function getURL(token, urlId) {
-    return await apiCall(
+    const result = await apiCall(
         token,
         'GET',
         `/_/api/v1/url/${urlId}`,
     );
+
+    result.data.views = result.data.stats.reduce((a, b) => a + b.count, 0);
+
+    return result;
 }

@@ -10,11 +10,16 @@
         <template v-for="(item, index) in rows">
           <v-list-tile @click="editURL(item.id)" :key="item.slug">
             <v-list-tile-content>
-              <v-list-tile-title v-html="item.slug"></v-list-tile-title>
-              <v-list-tile-sub-title v-html="item.redirect"></v-list-tile-sub-title>
+              <v-list-tile-title>
+                <span v-html="item.slug"/>
+              </v-list-tile-title>
+              <v-list-tile-sub-title>
+                <span v-html="item.redirect" />
+              </v-list-tile-sub-title>
             </v-list-tile-content>
             <v-list-tile-action>
               <v-flex row>
+                <v-chip v-if="!item.active" label small disabled>Disabled</v-chip>
                 <span class="caption">{{ item.views }} view<span v-if="item.views != 1">s</span></span>
               </v-flex>
             </v-list-tile-action>
