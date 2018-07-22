@@ -62,7 +62,6 @@ export default {
     loading: false,
     loadMore: true,
     errorMessage: '',
-    searchDebounce: null,
   }),
 
   computed: mapState({
@@ -98,17 +97,7 @@ export default {
 
   watch: {
     search(val) {
-      if (this.searchDebounce) {
-        clearTimeout(this.searchDebounce);
-      }
-
-      this.searchDebounce = setTimeout(
-        () => {
-          this.fetchData(true);
-          this.searchDebounce = null;
-        },
-        500
-      )
+      this.fetchData(true);
     }
   },
 

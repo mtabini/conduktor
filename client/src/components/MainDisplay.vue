@@ -9,7 +9,7 @@
         label="Search"
         prepend-inner-icon="search"
         :autofocus="true"
-        v-model="search"
+        v-model="textToSearch"
       ></v-text-field>
       <v-spacer></v-spacer>
       <span>{{ userName }}</span>
@@ -18,7 +18,7 @@
     
     <v-content>
       <v-container fluid fill-height class="grey lighten-4">
-        <UrlList :search="search" v-on:edit="editURL" />
+        <UrlList :search="textToSearch" v-on:edit="editURL" />
       </v-container>
     </v-content>
 
@@ -47,16 +47,45 @@ import UrlList from './UrlList';
 
 export default {
   name: 'MainDisplay',
+
+  props: {
+    search: String,
+  },
+
   data: () => ({
     dialog: false,
     title: process.env.APP_TITLE,
     loading: false,
-    search: '',
+
+    textToSearch: '',
+    textToSearchDebounce: null,
   }),
 
   computed: mapState({
     userName: state => state.auth.name,
   }),
+
+  watch: {
+    textToSearch(val) {
+      console.log(val);
+
+      if (this.textToSearchDebounce) {
+        clearTimeout(this.textToSearchDebounce);
+      }
+
+      this.textToSearchDebounce = setTimeout(
+        () => {
+          this.textToSearchDebounce = null;
+          this.$router.push({ name: 'MainDisplay' , query: { search: val }});
+        },
+        500,
+      );
+    }
+  },
+
+  mounted() {
+    this.textToSearch = this.search;
+  },
 
   methods: {
     logout() {

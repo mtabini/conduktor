@@ -161,7 +161,7 @@ export default {
     },
 
     cancel() {
-      this.$router.push('/');
+      this.$router.go(-1);
     },
 
     viewLogs() {
@@ -257,7 +257,7 @@ export default {
 
         this.$store.commit(UpdateURL, newUrl);
         this.show = false;
-        this.$router.push('/');
+        this.$router.go(-1);
       } catch(e) {
         console.error(e);
         const response = e.response;

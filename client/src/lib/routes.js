@@ -13,13 +13,16 @@ export default new Router({
       path: '/',
       name: 'MainDisplay',
       component: MainDisplay,
+      props: (route) => ({
+        search: route.query.search,
+      }),
       
       children: [
         {
           name: 'newUrl',
           path: 'new',
           component: UrlEdit,
-          props: { urlId: 0},
+          props: { urlId: 0 },
         },
 
         {

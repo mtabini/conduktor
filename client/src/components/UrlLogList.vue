@@ -125,7 +125,7 @@ export default {
     },
 
     cancel() {
-      this.$router.push({ name: 'editUrl', params: { urlId: this.urlId } });
+      this.$router.go(-1);
     },
 
     async load() {
