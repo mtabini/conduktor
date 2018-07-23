@@ -48,6 +48,7 @@
 import { mapState } from 'vuex';
 import { SetURLs, AddURLs } from '../lib/store';
 import { searchURLs } from '../lib/api';
+import { logout } from '../lib/auth';
 
 const EditUrlEvent = 'edit';
 
@@ -84,7 +85,13 @@ export default {
 
         this.loadMore = data.hasMore;
       } catch(e) {
-        this.errorMessage = e.message;
+        console.log(e);
+        if (e.response && e.response.status == 403) {
+          logout();
+          this.$router.push('/');
+        } else {
+          this.errorMessage = e.message;
+        }
       }
 
       this.loading = false;

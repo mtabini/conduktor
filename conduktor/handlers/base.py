@@ -97,12 +97,12 @@ def authenticated(handler):
     def auth_handler(self, *args, **kwargs):
         auth_header = self.request.headers.get('authorization', '').split(' ')
 
-        if len(auth_header) != 2 or auth_header[0].lower() != 'token':
-            raise HTTPError(403)
-
-        token = auth_header[1]
-
         try:
+            if len(auth_header) != 2 or auth_header[0].lower() != 'token':
+                raise HTTPError(403)
+
+            token = auth_header[1]
+
             idinfo = id_token.verify_oauth2_token(token, requests.Request(), options.GOOGLE_OAUTH_CLIENT_ID)
 
             if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
@@ -117,9 +117,9 @@ def authenticated(handler):
                 raise HTTPError(403)
 
             self.user_name = idinfo['name']
-        except:
-            raise HTTPError(403)
 
-        return handler(self, *args, **kwargs)
+            return handler(self, *args, **kwargs)
+        except Exception as e:
+            self.report_error(e, 403)
 
     return auth_handler

@@ -65,6 +65,7 @@
 <script>
 import { getURL, getURLLogs } from '../lib/api';
 import moment from 'moment';
+import { logout } from '../lib/auth';
 
 export default {
   name: 'UrlLogList',
@@ -138,7 +139,23 @@ export default {
         this.loading = false;
         this.show = true;
       } catch (e) {
-        throw e;
+        if (e.response) {
+          switch(e.response.status) {
+            case 403:
+              logout();
+              this.$router.push('/');
+              break;
+
+            case 404:
+              this.loadError = 'Redirect not found';
+              break;
+
+            default:
+              this.loadError = e.message;
+          }
+        } else {
+          this.loadError = e.message;
+        }
       }
     }
   }

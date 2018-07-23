@@ -94,6 +94,7 @@
 <script>
 import { createURL, updateURL, getURL } from '../lib/api';
 import { UpdateURL } from '../lib/store';
+import { logout } from '../lib/auth';
 
 export default {
   name: 'UrlEdit',
@@ -188,6 +189,11 @@ export default {
 
         if (e.response) {
           switch(e.response.status) {
+            case 403:
+              logout();
+              this.$router.push('/');
+              break
+
             case 404:
               this.loadError = 'Redirect not found. Please check your URL and try again.';
               break;
@@ -262,8 +268,23 @@ export default {
         console.error(e);
         const response = e.response;
 
-        if (response && response.status == 400) {
-          this.saveError = response.data.error;
+        if (response) {
+          switch(response.status) {
+            case 400:
+              this.saveError = response.data.error;
+              break;
+
+            case 403:
+              this.saveError = 'Your session has expired. Please log out and log in again.';
+              break;
+
+            case 500:
+              this.saveError = 'A server error has occurred. Please try again.';
+              break;
+            
+            default:
+              this.saveError = 'An unknown error has occurred. Please try again.';
+          }
         } else {
           this.saveError = 'A network error has occurred. Please try again.';
         }

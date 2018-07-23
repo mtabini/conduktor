@@ -18,7 +18,7 @@
     
     <v-content>
       <v-container fluid fill-height class="grey lighten-4">
-        <UrlList :search="textToSearch" v-on:edit="editURL" />
+        <UrlList :search="search" v-on:edit="editURL" />
       </v-container>
     </v-content>
 
@@ -67,8 +67,6 @@ export default {
 
   watch: {
     textToSearch(val) {
-      console.log(val);
-
       if (this.textToSearchDebounce) {
         clearTimeout(this.textToSearchDebounce);
       }
@@ -80,6 +78,10 @@ export default {
         },
         500,
       );
+    },
+
+    search(val) {
+      this.textToSearch = val;
     }
   },
 
