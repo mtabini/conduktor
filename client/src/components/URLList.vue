@@ -28,7 +28,10 @@
             </v-list-tile-content>
             <v-list-tile-action>
               <v-flex row>
-                <v-chip v-if="!item.active" label small disabled>Inactive</v-chip>
+                <v-chip v-if="!item.active" small disabled>Inactive</v-chip>
+                <v-btn icon class="mx-2" title="Copy link to clipboard" @click.stop="copyLink(item.slug)">
+                  <v-icon color="grey">file_copy</v-icon>
+                </v-btn>
                 <span class="caption">{{ item.views }} view<span v-if="item.views != 1">s</span></span>
               </v-flex>
             </v-list-tile-action>
@@ -41,7 +44,10 @@
       <v-progress-circular v-if="loading" :indeterminate="true"/>
       <span @click="fetchData()" v-if="errorMessage == '' && !loading && loadMore">Load more…</span>
     </v-flex>
+
+    <span ref="clipboardSpan"></span>
   </v-flex>
+
 </template>
 
 <script>
@@ -100,6 +106,24 @@ export default {
 
     editURL(urlId) {
       this.$emit(EditUrlEvent, urlId);
+    },
+
+    copyLink(slug) {
+      const span = this.$refs.clipboardSpan;
+
+      span.innerText = `${process.env.API_URL}/${slug}`;
+
+      const range = document.createRange();
+      range.selectNode(span);
+
+      const selection = window.getSelection();
+
+      selection.removeAllRanges();
+      selection.addRange(range);
+
+      document.execCommand('copy');
+
+      span.innerHTML = '';
     }
   },
 
