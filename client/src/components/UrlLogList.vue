@@ -9,7 +9,7 @@
       </v-card>
     </v-dialog>
 
-    <v-dialog v-model="hasLoadError" :persistent="true" width="300px">
+    <v-dialog v-model="hasLoadError" :persistent="true" width="300px" @keydown.esc="cancel()">
       <v-card>
         <v-card-title class="grey lighten-4 py-4 title">
           <span>Error</span>
@@ -26,7 +26,7 @@
       </v-card>
     </v-dialog>
 
-    <v-dialog v-model="show">
+    <v-dialog v-model="show" @keydown.esc="cancel()">
       <v-card>
         <v-card-title class="grey lighten-4 py-4 title">
           <span>Logs for Redirect '<span v-html="slug"></span>'</span>

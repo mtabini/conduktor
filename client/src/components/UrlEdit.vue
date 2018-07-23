@@ -8,7 +8,7 @@
         </v-card-text>
       </v-card>
     </v-dialog>
-    <v-dialog v-model="hasLoadError" :persistent="true" width="300px">
+    <v-dialog v-model="hasLoadError" :persistent="true" width="300px" @keydown.esc="cancel()">
       <v-card>
         <v-card-title class="grey lighten-4 py-4 title">
           <span>Error</span>
@@ -24,7 +24,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-dialog v-model="show">
+    <v-dialog v-model="show" @keydown.esc="cancel()">
       <v-card>
         <v-form v-model="canSubmit" ref="form">
           <v-card-title class="grey lighten-4 py-4 title">
@@ -80,7 +80,7 @@
             <v-btn flat @click="viewLogs()" :disabled="saving">Activity Log</v-btn>
             <v-spacer></v-spacer>
             <v-btn flat color="primary" @click="cancel()" :disabled="saving">Cancel</v-btn>
-            <v-btn flat :disabled="!canSubmit || saving" @click.stop="save()" :loading="saving">
+            <v-btn flat type="submit" :disabled="!canSubmit || saving" @click.stop="save()" :loading="saving">
               <span v-if="id == 0">Create</span>
               <span v-else>Update</span>
             </v-btn>
@@ -290,6 +290,8 @@ export default {
           this.saveError = 'A network error has occurred. Please try again.';
         }
       }
+
+      this.saving = false;
     }
   },
 
