@@ -93,7 +93,7 @@
 
 <script>
 import { createURL, updateURL, getURL } from '../lib/api';
-import { UpdateURL } from '../lib/store';
+import { UpdateURL, LogOut } from '../lib/store';
 import { logout } from '../lib/auth';
 
 export default {
@@ -191,6 +191,7 @@ export default {
           switch(e.response.status) {
             case 403:
               logout();
+              this.$store.commit(LogOut);
               this.$router.push('/');
               break
 

@@ -66,6 +66,7 @@
 import { getURL, getURLLogs } from '../lib/api';
 import moment from 'moment';
 import { logout } from '../lib/auth';
+import { LogOut } from '../lib/store';
 
 export default {
   name: 'UrlLogList',
@@ -143,6 +144,7 @@ export default {
           switch(e.response.status) {
             case 403:
               logout();
+              this.$store.commit(LogOut);
               this.$router.push('/');
               break;
 

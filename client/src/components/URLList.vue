@@ -5,7 +5,7 @@
       {{ errorMessage }}. Please refresh to try again.
     </v-alert>
 
-    <v-card>
+    <v-card v-if="rows.length > 0 || !loading">
       <v-list two-line>
         <v-list-tile v-if="rows.length == 0">
           <v-list-tile-content>
@@ -46,7 +46,7 @@
 
 <script>
 import { mapState } from 'vuex';
-import { SetURLs, AddURLs } from '../lib/store';
+import { SetURLs, AddURLs, LogOut } from '../lib/store';
 import { searchURLs } from '../lib/api';
 import { logout } from '../lib/auth';
 
@@ -88,6 +88,7 @@ export default {
         console.log(e);
         if (e.response && e.response.status == 403) {
           logout();
+          this.$store.commit(LogOut);
           this.$router.push('/');
         } else {
           this.errorMessage = e.message;
@@ -109,6 +110,7 @@ export default {
   },
 
   mounted() {
+    this.$store.commit(SetURLs, []);
     this.fetchData(true);
   }
 }
