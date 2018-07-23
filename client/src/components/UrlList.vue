@@ -125,11 +125,12 @@ export default {
       {
         text: 'URL',
         sortable: false,
+        width: '50%',
       },
       {
         text: 'Description',
         sortable: false,
-        width: '100%',
+        width: '50%',
       },
       {
         text: 'Views',
