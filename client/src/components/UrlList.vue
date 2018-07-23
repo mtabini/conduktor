@@ -35,8 +35,8 @@
             <v-icon small color="grey" />
           </td>
           <td class="justify-center layout px-0">
-            <v-icon class="mr-2" small @click="copyLink(props.item.slug)" color="light-blue" title="View activity log">link</v-icon>
-            <v-icon class="mr-3" small @click="viewLog(props.item.id)" color="light-blue" title="Copy link to clipboard">content_copy</v-icon>
+            <v-icon class="mr-2" small @click="copyLink(props.item.slug)" color="light-blue" title="Copy link to clipboard">link</v-icon>
+            <v-icon class="mr-3" small @click="viewLog(props.item.id)" color="light-blue" title="View activity log">content_copy</v-icon>
           </td>
         </template>
       </v-data-table>
