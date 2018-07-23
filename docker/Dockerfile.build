@@ -19,8 +19,6 @@ WORKDIR /app
 RUN npm i && npm run build
 
 
-
-
 FROM python:latest
 
 COPY . /app
