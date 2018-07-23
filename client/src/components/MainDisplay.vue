@@ -1,7 +1,7 @@
 <template>
   <v-layout>
     <v-toolbar color="light-blue" app absolute clipped-left>
-      <span class="title ml-3 mr-5">{{ title }}</span>
+      <span class="title ml-3 mr-5 hidden-sm-and-down">{{ title }}</span>
       <v-text-field
         solo-inverted
         flat
@@ -12,13 +12,13 @@
         v-model="textToSearch"
       ></v-text-field>
       <v-spacer></v-spacer>
-      <span>{{ userName }}</span>
+      <span class="hidden-sm-and-down">{{ userName }}</span>
       <v-btn flat @click.stop="logout()">Logout</v-btn>
     </v-toolbar>
     
     <v-content>
       <v-container fluid fill-height class="grey lighten-4">
-        <UrlList :search="search" v-on:edit="editURL" />
+        <UrlList :search="search" v-on:edit="editUrl" v-on:view-log="viewUrlLog" />
       </v-container>
     </v-content>
 
@@ -29,7 +29,7 @@
       color="pink"
       dark
       fixed
-      @click.stop="editURL(null)"
+      @click.stop="editUrl(null)"
     >
       <v-icon>add</v-icon>
     </v-btn>
@@ -95,13 +95,17 @@ export default {
       this.$store.commit(LogOut);
     },
 
-    editURL(urlId) {
+    editUrl(urlId) {
       if (urlId) {
         this.$router.push({ name: 'editUrl', params: { urlId: urlId }, query: this.$route.query });
       } else {
         this.$router.push({ name: 'newUrl', query: this.$route.query });
       }
     },
+
+    viewUrlLog(urlId) {
+      this.$router.push({ name: 'viewUrlLogs', params: { urlId: urlId }, query: this.$route.query });
+    }
   },
 
   components: {

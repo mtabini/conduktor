@@ -24,7 +24,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-dialog v-model="show" @keydown.esc="cancel()">
+    <v-dialog v-model="show" @keydown.esc="cancel()" max-width="700px">
       <v-card>
         <v-form v-model="canSubmit" ref="form">
           <v-card-title class="grey lighten-4 py-4 title">
@@ -77,7 +77,6 @@
           </v-container>
           
           <v-card-actions>
-            <v-btn flat @click="viewLogs()" :disabled="saving">Activity Log</v-btn>
             <v-spacer></v-spacer>
             <v-btn flat color="primary" @click="cancel()" :disabled="saving">Cancel</v-btn>
             <v-btn flat type="submit" :disabled="!canSubmit || saving" @click.stop="save()" :loading="saving">
@@ -163,10 +162,6 @@ export default {
 
     cancel() {
       this.$router.go(-1);
-    },
-
-    viewLogs() {
-      this.$router.push({ name: 'viewUrlLogs', params: { urlId: this. urlId }, query: this.$route.query })
     },
 
     async load() {

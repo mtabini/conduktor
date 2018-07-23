@@ -87,11 +87,7 @@ class URLHandler(BaseHandler):
                 description=self.json_data['description'],
             )
 
-            url.logs.append(
-                URLLog(
-                    log_info='Created by system.'
-                )
-            )
+            url.logs.append(URLLog(log_info='Created by {}.'.format(self.user_name)))
 
             self.db.add(url)
             self.db.commit()

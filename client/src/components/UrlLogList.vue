@@ -26,7 +26,7 @@
       </v-card>
     </v-dialog>
 
-    <v-dialog v-model="show" @keydown.esc="cancel()">
+    <v-dialog v-model="show" @keydown.esc="cancel()" max-width="700px">
       <v-card>
         <v-card-title class="grey lighten-4 py-4 title">
           <span>Logs for Redirect '<span v-html="slug"></span>'</span>
@@ -55,7 +55,7 @@
         
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn flat color="primary" @click="cancel()">Back</v-btn>
+          <v-btn flat color="primary" @click="cancel()">Close</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>

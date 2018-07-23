@@ -6,7 +6,38 @@
     </v-alert>
 
     <v-card v-if="rows.length > 0 || !loading">
-      <v-list two-line>
+      <v-data-table 
+        :headers="headers"
+        :items="rows" 
+        :rows-per-page-items="[5,10]"
+        hide-actions
+        :loading="loading"
+        class="hidden-sm-and-down"
+      >
+        <template slot="no-data">
+          <v-container fluid class="text-xs-center font-weight-bold">
+            No results found.
+          </v-container>
+        </template>
+        <template slot="items" slot-scope="props">
+          <td class="table-list" @click="editURL(props.item.id)">
+            <span class="font-weight-bold">{{ props.item.slug }}</span>
+            <v-chip v-if="!props.item.active" small disabled>Inactive</v-chip>
+          </td>
+          <td class="table-list" @click="editURL(props.item.id)">
+            {{ props.item.redirect }}
+          </td>
+          <td class="table-list" @click="editURL(props.item.id)">
+            {{ props.item.description }}
+          </td>
+          <td class="justify-center layout px-0">
+            <v-icon class="mr-2" small @click="copyLink(props.item.slug)" color="light-blue" title="View activity log">info</v-icon>
+            <v-icon class="mr-3" small @click="viewLog(props.item.id)" color="light-blue" title="Copy link to clipboard">content_copy</v-icon>
+          </td>
+        </template>
+      </v-data-table>
+
+      <v-list two-line class="hidden-md-and-up">
         <v-list-tile v-if="rows.length == 0">
           <v-list-tile-content>
             <v-list-tile-sub-title>
@@ -30,7 +61,7 @@
               <v-flex row>
                 <v-chip v-if="!item.active" small disabled>Inactive</v-chip>
                 <v-btn icon class="mx-2" title="Copy link to clipboard" @click.stop="copyLink(item.slug)">
-                  <v-icon color="grey">file_copy</v-icon>
+                  <v-icon color="light-blue">content_copy</v-icon>
                 </v-btn>
                 <span class="caption">{{ item.views }} view<span v-if="item.views != 1">s</span></span>
               </v-flex>
@@ -38,6 +69,7 @@
           </v-list-tile>
         </template>
       </v-list>
+
     </v-card>
     
     <v-flex class="text-xs-center pt-3">
@@ -46,6 +78,16 @@
     </v-flex>
 
     <span ref="clipboardSpan"></span>
+
+    <v-snackbar
+      v-model="clipboardCopied"
+      :timeout="3000"
+    >
+      URL copied to clipboard.
+      <v-btn dark flat @click="clipboardCopied=false">
+        Close
+      </v-btn>
+    </v-snackbar>
   </v-flex>
 
 </template>
@@ -57,6 +99,7 @@ import { searchURLs } from '../lib/api';
 import { logout } from '../lib/auth';
 
 const EditUrlEvent = 'edit';
+const ViewUrlLogEvent = 'view-log';
 
 export default {
   name: 'UrlList',
@@ -69,6 +112,28 @@ export default {
     loading: false,
     loadMore: true,
     errorMessage: '',
+
+    headers: [
+      {
+        text: 'Slug',
+        sortable: false,
+      },
+      {
+        text: 'URL',
+        sortable: false,
+      },
+      {
+        text: 'Description',
+        sortable: false,
+        width: '100%',
+      },
+      {
+        text: '',
+        sortable: false,
+      },
+    ],
+
+    clipboardCopied: false,
   }),
 
   computed: mapState({
@@ -124,6 +189,12 @@ export default {
       document.execCommand('copy');
 
       span.innerHTML = '';
+
+      this.clipboardCopied = true;
+    },
+
+    viewLog(urlId) {
+      this.$emit(ViewUrlLogEvent, urlId);
     }
   },
 
@@ -140,3 +211,10 @@ export default {
 }
 
 </script>
+
+<style scoped>
+.table-list {
+  cursor: pointer;
+  text-overflow: ellipsis;
+}
+</style>
