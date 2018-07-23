@@ -11,10 +11,11 @@ services:
       context: .
       dockerfile: ./docker/Dockerfile.build
       args:
-        CONDUKTOR_API_URL: http://localhost:3000
-        CONDUKTOR_AUTHORIZED_DOMAINS: ${CONDUKTOR_AUTHORIZED_DOMAINS}
-        CONDUKTOR_GOOGLE_OAUTH_CLIENT_ID: ${CONDUKTOR_GOOGLE_OAUTH_CLIENT_ID}
-        CONDUKTOR_APP_NAME: Condukkkktor
+        API_URL: ${CONDUKTOR_API_URL}
+        BASE_URL: ${CONDUKTOR_BASE_URL}
+        AUTHORIZED_DOMAINS: ${CONDUKTOR_AUTHORIZED_DOMAINS}
+        GOOGLE_OAUTH_CLIENT_ID: ${CONDUKTOR_GOOGLE_OAUTH_CLIENT_ID}
+        APP_TITLE: ${CONDUKTOR_APP_TITLE}
     ports: 
       - 3000:3000
     networks:
