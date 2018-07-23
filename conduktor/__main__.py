@@ -1,5 +1,6 @@
 import alembic.config
 import logging
+import os
 import tornado.ioloop
 import tornado.web
 
@@ -22,6 +23,8 @@ def main():
     tornado.ioloop.IOLoop.current().start() 
 
 def migrate():
+    os.chdir(os.path.join(os.path.dirname(__file__), 'alembic'))
+    
     args = [
         '--raiseerr',
         'upgrade', 'head',

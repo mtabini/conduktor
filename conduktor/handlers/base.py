@@ -99,27 +99,28 @@ def authenticated(handler):
 
         try:
             if len(auth_header) != 2 or auth_header[0].lower() != 'token':
-                raise HTTPError(403)
+                raise HTTPError(403, log_message='Invalid authorization scheme')
 
             token = auth_header[1]
 
             idinfo = id_token.verify_oauth2_token(token, requests.Request(), options.GOOGLE_OAUTH_CLIENT_ID)
 
             if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
-                raise HTTPError(403)
+                raise HTTPError(403, log_message='Invalid ISS')
 
             authorized_domains = options.AUTHORIZED_DOMAINS.split(',')
 
             if idinfo['hd'] not in authorized_domains:
-                raise HTTPError(403)
+                raise HTTPError(403, log_message='Not in authorized domains')
 
             if idinfo['aud'] != options.GOOGLE_OAUTH_CLIENT_ID:
-                raise HTTPError(403)
+                raise HTTPError(403, log_message='AUD is not the correct client ID')
 
             self.user_name = idinfo['name']
-
-            return handler(self, *args, **kwargs)
         except Exception as e:
             self.report_error(e, 403)
+            return
+
+        return handler(self, *args, **kwargs)
 
     return auth_handler

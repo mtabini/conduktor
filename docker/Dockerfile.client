@@ -1,0 +1,9 @@
+FROM node:latest
+
+COPY ./client /app
+
+WORKDIR /app
+
+RUN npm i
+
+CMD ["npm", "run", "dev"]

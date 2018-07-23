@@ -111,7 +111,7 @@ export default {
     copyLink(slug) {
       const span = this.$refs.clipboardSpan;
 
-      span.innerText = `${process.env.API_URL}/${slug}`;
+      span.innerText = `${process.env.BASE_URL}/${slug}`;
 
       const range = document.createRange();
       range.selectNode(span);

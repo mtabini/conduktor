@@ -6,7 +6,7 @@
           <v-container fill-height>
             <v-layout align-center>
               <v-flex>
-                <h3 class="display-3">Welcome to Conduktor</h3>
+                <h3 class="display-3">Welcome to {{ title }}</h3>
 
                 <span class="subheading">You must sign in with Google before being able to use this app.</span>
 
@@ -35,35 +35,43 @@ import { SetAuth } from '../lib/store';
 
 export default {
   name: 'Login',
+
   data () {
     return {
+      title: process.env.APP_TITLE,
+      error: null,
+      
       googleSignInParams: {
         client_id:  process.env.GOOGLE_OAUTH_CLIENT_ID,
       },
-      error: null,
     }
   },
-  methods: {
+
+methods: {
     onSignInSuccess (googleUser) {
       try {
         const authData = extractAuthData(googleUser);
         this.$data.error = null;
         this.$store.commit(SetAuth, authData);
       } catch(e) {
-        this.$data.error = e.message;
+        if (e.error != 'popup_closed_by_user') {
+          this.$data.error = e.message;
+        }
       }
     },
+
     onSignInError (error) {
-      // `error` contains any error occurred.
-      this.$data.error = error;
-    }
-  }
+      if (error.error != 'popup_closed_by_user') {
+        this.$data.error = error;
+      }
+    },
+  },
 }
 </script>
 
 <style>
 .g-signin-button {
-  /* This is where you control how the button looks. Be creative! */
+  cursor: pointer;
   display: inline-block;
   padding: 4px 8px;
   border-radius: 3px;

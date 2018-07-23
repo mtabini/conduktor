@@ -1,0 +1,50 @@
+version: '3'
+
+services:
+
+  server:
+    environment:
+      DB_DSN: postgres://postgres:postgres@postgres/postgres
+      GOOGLE_OAUTH_CLIENT_ID: ${CONDUKTOR_GOOGLE_OAUTH_CLIENT_ID}
+      AUTHORIZED_DOMAINS: ${CONDUKTOR_AUTHORIZED_DOMAINS}
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.server
+    ports: 
+      - 3000:3000
+    volumes:
+      - ./conduktor:/app/conduktor
+    networks:
+      - overlay
+
+  client:
+    environment:
+      APP_TITLE: Conduktor
+      API_URL: http://localhost:3000
+      BASE_URL: http://localhost:3000
+      GOOGLE_OAUTH_CLIENT_ID: ${CONDUKTOR_GOOGLE_OAUTH_CLIENT_ID}
+      AUTHORIZED_DOMAINS: ${CONDUKTOR_AUTHORIZED_DOMAINS}
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.client
+    ports:
+      - 3001:3001
+    volumes:
+      - ./client:/app
+    networks:
+      - overlay
+
+  postgres:
+    environment:
+      POSTGRES_PASSWORD: postgres
+    image: postgres
+    volumes:
+      - db:/var/lib/postgresql
+    networks:
+      - overlay
+
+volumes:
+  db:
+
+networks:
+  overlay:

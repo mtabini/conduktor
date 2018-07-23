@@ -38,10 +38,10 @@ module.exports = {
 
   build: {
     // Template for index.html
-    index: path.resolve(__dirname, '../../conduktor/static/index.html'),
+    index: path.resolve(__dirname, '../static/index.html'),
 
     // Paths
-    assetsRoot: path.resolve(__dirname, '../../conduktor/static'),
+    assetsRoot: path.resolve(__dirname, '../static'),
     assetsSubDirectory: 'static',
     assetsPublicPath: '/_/',
 

@@ -10,7 +10,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const portfinder = require('portfinder')
 
-const HOST = 'conduktor.example.com'
+const HOST = '0.0.0.0'
 const PORT = 3001
 
 const devWebpackConfig = merge(baseWebpackConfig, {

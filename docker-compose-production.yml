@@ -5,17 +5,18 @@ services:
   server:
     environment:
       DB_DSN: postgres://postgres:postgres@postgres/postgres
-      SITE_URL: conduktor.example.com
       GOOGLE_OAUTH_CLIENT_ID: ${CONDUKTOR_GOOGLE_OAUTH_CLIENT_ID}
-      GOOGLE_OAUTH_CLIENT_SECRET: ${CONDUKTOR_GOOGLE_OAUTH_CLIENT_SECRET}
       AUTHORIZED_DOMAINS: ${CONDUKTOR_AUTHORIZED_DOMAINS}
     build:
       context: .
-      dockerfile: ./docker/Dockerfile.server
+      dockerfile: ./docker/Dockerfile.build
+      args:
+        CONDUKTOR_API_URL: http://localhost:3000
+        CONDUKTOR_AUTHORIZED_DOMAINS: ${CONDUKTOR_AUTHORIZED_DOMAINS}
+        CONDUKTOR_GOOGLE_OAUTH_CLIENT_ID: ${CONDUKTOR_GOOGLE_OAUTH_CLIENT_ID}
+        CONDUKTOR_APP_NAME: Condukkkktor
     ports: 
       - 3000:3000
-    volumes:
-      - ./conduktor:/app/conduktor
     networks:
       - overlay
 
