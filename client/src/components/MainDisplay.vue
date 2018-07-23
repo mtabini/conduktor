@@ -97,9 +97,9 @@ export default {
 
     editURL(urlId) {
       if (urlId) {
-        this.$router.push({ name: 'editUrl', params: { urlId: urlId } });
+        this.$router.push({ name: 'editUrl', params: { urlId: urlId }, query: this.$route.query });
       } else {
-        this.$router.push({ name: 'newUrl' });
+        this.$router.push({ name: 'newUrl', query: this.$route.query });
       }
     },
   },

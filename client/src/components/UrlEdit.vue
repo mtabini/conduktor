@@ -166,7 +166,7 @@ export default {
     },
 
     viewLogs() {
-      this.$router.push({ name: 'viewUrlLogs', params: { urlId: this. urlId } })
+      this.$router.push({ name: 'viewUrlLogs', params: { urlId: this. urlId }, query: this.$route.query })
     },
 
     async load() {
