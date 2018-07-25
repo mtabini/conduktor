@@ -12,9 +12,11 @@ Conduktor also keeps basic statistics on usage for each redirect, so that stale 
 
 Before installing Conduktor, you need to obtain a set of properly-configured oAuth2 credentials as explained in the [Google Sign-in documentation](https://developers.google.com/identity/sign-in/web/sign-in).
 
-Conduktor can be easily stood up using `docker-compose`. The `docker-compose-production.yml` file sets up a complete environment that also includes a persistent PostgreSQL installation.
+Conduktor can be easily stood up using `docker-compose`. The `docker-compose-production.yml` file sets up a complete environment that also includes a persistent PostgreSQL installation:
 
-The app relies on environment variables to provide several bits of essential context:
+    docker-compose --file docker-compose-production.yml --build -d up
+
+The app relies on environment variables to provide several bits of essential context. These must be set up _before_ you run `docker-compose`:
 
 - `GOOGLE_OAUTH_CLIENT_ID`: the Client ID of your oAuth credentials
 - `AUTHORIZED_DOMAINS`: a comma-separated list of domains whose users are allowed to access Conduktor's management interface
@@ -25,7 +27,7 @@ The app relies on environment variables to provide several bits of essential con
 
 Typically, `BASE_URL` and `API_URL` will be the same value, but they could be different if, for example, you wish to use an application firewall to only make the API accessible from inside a private network.
 
-(If you're using the provided Docker Compose configurations, the `DB_DSN` variable is ignored, and each of the remaining variables should be prefixed with `CONDUKTOR_`—e.g., `CONDUKTOR_API_URL`, etc.)
+If you're using the provided Docker Compose configurations, the `DB_DSN` variable is ignored, and each of the remaining variables should be prefixed with `CONDUKTOR_`—e.g., `CONDUKTOR_API_URL`, etc.
 
 ### Setup
 
