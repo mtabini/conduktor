@@ -21,7 +21,7 @@ RUN npm i && npm run build
 
 FROM python:latest
 
-COPY . /app
+COPY /server /app
 COPY --from=0 /app/static /app/conduktor/static
 
 WORKDIR /app
