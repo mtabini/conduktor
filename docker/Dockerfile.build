@@ -1,0 +1,31 @@
+FROM node:latest
+
+ARG API_URL
+ARG BASE_URL
+ARG AUTHORIZED_DOMAINS
+ARG GOOGLE_OAUTH_CLIENT_ID
+ARG APP_TITLE
+
+ENV API_URL $API_URL
+ENV BASE_URL $BASE_URL
+ENV AUTHORIZED_DOMAINS $AUTHORIZED_DOMAINS
+ENV GOOGLE_OAUTH_CLIENT_ID $GOOGLE_OAUTH_CLIENT_ID
+ENV APP_TITLE $APP_TITLE
+
+COPY ./client /app
+
+WORKDIR /app
+
+RUN npm i && npm run build
+
+
+FROM python:latest
+
+COPY /server /app
+COPY --from=0 /app/static /app/conduktor/static
+
+WORKDIR /app
+
+RUN pip install -e .
+
+CMD ["conduktor"]
