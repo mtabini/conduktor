@@ -1,0 +1,9 @@
+FROM python:latest
+
+COPY ./server /app
+
+WORKDIR /app
+
+RUN pip install -e .
+
+CMD ["conduktor"]
