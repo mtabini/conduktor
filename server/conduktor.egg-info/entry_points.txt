@@ -1,0 +1,4 @@
+[console_scripts]
+conduktor = conduktor.__main__:main
+migrate = conduktor.__main__:migrate
+
