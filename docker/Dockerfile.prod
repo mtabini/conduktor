@@ -25,3 +25,7 @@ COPY /server /app
 COPY --from=0 /app/static /app/conduktor/static
 
 WORKDIR /app
+
+RUN pip install -e .
+
+CMD ["conduktor"]

@@ -9,3 +9,5 @@ README.md
 LICENSE
 .vscode
 __pycache__
+dist
+.DS_Store

@@ -4,34 +4,20 @@ services:
 
   server:
     environment:
-      DB_DSN: postgres://postgres:postgres@postgres/postgres
       GOOGLE_OAUTH_CLIENT_ID: ${CONDUKTOR_GOOGLE_OAUTH_CLIENT_ID}
       AUTHORIZED_DOMAINS: ${CONDUKTOR_AUTHORIZED_DOMAINS}
     build:
       context: .
-      dockerfile: ./docker/Dockerfile.prod
+      dockerfile: ./docker/Dockerfile.build
       args:
         API_URL: ${CONDUKTOR_API_URL}
         BASE_URL: ${CONDUKTOR_BASE_URL}
         AUTHORIZED_DOMAINS: ${CONDUKTOR_AUTHORIZED_DOMAINS}
         GOOGLE_OAUTH_CLIENT_ID: ${CONDUKTOR_GOOGLE_OAUTH_CLIENT_ID}
         APP_TITLE: ${CONDUKTOR_APP_TITLE}
-    ports: 
-      - 3000:3000
-    networks:
-      - overlay
-
-  postgres:
-    environment:
-      POSTGRES_PASSWORD: postgres
-    image: postgres
     volumes:
-      - db:/var/lib/postgresql
-    networks:
-      - overlay
-
-volumes:
-  db:
-
-networks:
-  overlay:
+      - ./dist:/app/dist
+    command:
+      - /bin/bash
+      - -c
+      - "python setup.py sdist bdist_wheel"
