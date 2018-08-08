@@ -3,9 +3,14 @@ import os
 from tornado.options import define
 
 
-def from_env(name, help, default=None):
+def from_env(name, help, default=None, is_bool=False):
     if name in os.environ:
-        define(name, default=os.environ[name], help=help)
+        if is_bool:
+            value = True if os.environ[name].lower() in ['1', 'yes', 'true'] else False
+        else:
+            value = os.environ[name]
+
+        define(name, default=value, help=help)
         return
 
     if default:
@@ -15,7 +20,7 @@ def from_env(name, help, default=None):
     raise Exception('Missing required environment variable {}'.format(name))
 
 from_env('DB_DSN', 'A valid DSN to the database')
-from_env('DEBUG', 'Turn debug mode on', True)
+from_env('DEBUG', 'Turn debug mode on', True, is_bool=True)
 
 from_env('PORT', 'The port on which the server should listen', 3000)
 
