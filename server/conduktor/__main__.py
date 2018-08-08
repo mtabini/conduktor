@@ -1,10 +1,12 @@
 import alembic.config
+import asyncio
 import logging
 import os
 import tornado.ioloop
 import tornado.web
 
 from tornado.options import options
+from tornado.platform.asyncio import AnyThreadEventLoopPolicy
 
 from conduktor import settings, db, routes, models
 
@@ -15,6 +17,10 @@ def make_app():
         debug=options.DEBUG,
     )
 
+def make_wsgi_app():
+    logging.getLogger().setLevel(logging.INFO)
+    return tornado.wsgi.WSGIAdapter(make_app())
+    
 def main():
     logging.getLogger().setLevel(logging.INFO)
     logging.info('Starting server on port {}'.format(options.PORT))
@@ -33,5 +39,8 @@ def migrate():
     alembic.config.main(argv=args)
 
 
+asyncio.set_event_loop_policy(AnyThreadEventLoopPolicy())
+
 if __name__ == "__main__":
     main()    
+
