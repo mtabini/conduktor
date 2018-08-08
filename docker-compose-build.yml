@@ -20,4 +20,4 @@ services:
     command:
       - /bin/bash
       - -c
-      - "python setup.py sdist bdist_wheel"
+      - "python setup.py sdist"

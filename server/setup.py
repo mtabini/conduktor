@@ -3,11 +3,13 @@ from os import path
 
 home = path.abspath(path.dirname(__file__))
 
+print(find_packages(home))
+
 setup(
     name='conduktor',
     version='1.0.0',
     description='A simple URL shortener written in Python',
-    packages=find_packages(path.join(home, 'conduktor')),
+    packages=find_packages(home),
     entry_points={
         'console_scripts': [
             'conduktor = conduktor.__main__:main',
@@ -22,5 +24,6 @@ setup(
         'alembic>=1',
         'requests>=2.19.1',
         'google-auth>=1.5',
-    ]
+    ],
+    include_package_data=True,
 )

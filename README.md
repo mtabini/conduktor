@@ -29,6 +29,15 @@ Typically, `BASE_URL` and `API_URL` will be the same value, but they could be di
 
 If you're using the provided Docker Compose configurations, the `DB_DSN` variable is ignored, and each of the remaining variables should be prefixed with `CONDUKTOR_`—e.g., `CONDUKTOR_API_URL`, etc.
 
+### Building as a Python package
+
+For convenience, it is possible to package the entire project into a Python module. Start by setting all the environment variables outlined in the previous section, then issue these commands:
+
+    docker-compose -f docker-compose-build.yml build --no-cache
+    docker-compose -f docker-compose-build.yml up
+
+This will produce a compiled file in the `dist` directory under the project's root.
+
 ### Setup
 
 Before running the app for the first time, you should run migrations to ensure that the database is properly set up. If you're using the provided Docker Compose infrastructure, this should do the trick:

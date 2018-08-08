@@ -1,1 +1,2 @@
-recursive-include conduktor *
+recursive-include conduktor/static *
+recursive-include conduktor/alembic/alembic *
