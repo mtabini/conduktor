@@ -54,7 +54,7 @@ export default {
 
   data: () => ({
     dialog: false,
-    title: process.env.APP_TITLE,
+    title: window.ConduktorConfig ? window.ConduktorConfig.APP_TITLE : process.env.APP_TITLE,
     loading: false,
 
     textToSearch: '',

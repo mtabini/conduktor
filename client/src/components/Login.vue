@@ -38,11 +38,11 @@ export default {
 
   data () {
     return {
-      title: process.env.APP_TITLE,
+      title: window.ConduktorConfig ? window.ConduktorConfig.APP_TITLE : process.env.APP_TITLE,
       error: null,
       
       googleSignInParams: {
-        client_id:  process.env.GOOGLE_OAUTH_CLIENT_ID,
+        client_id:  window.ConduktorConfig ? window.ConduktorConfig.GOOGLE_OAUTH_CLIENT_ID : process.env.GOOGLE_OAUTH_CLIENT_ID,
       },
     }
   },

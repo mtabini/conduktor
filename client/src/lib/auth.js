@@ -17,7 +17,7 @@ export function extractAuthData(googleUser, store) {
     const user = googleUser.getBasicProfile();
     const email = user.getEmail();
 
-    const domains = process.env.AUTHORIZED_DOMAINS.split(',');
+    const domains = window.ConduktorConfig ? window.ConduktorConfig.AUTHORIZED_DOMAINS : process.env.AUTHORIZED_DOMAINS.split(',');
 
     if (!domains.includes(email.split('@')[1].toLowerCase())) {
         throw new Error('Your e-mail address does not belong to an authorized domain. Please try again.');

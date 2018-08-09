@@ -5,7 +5,7 @@ import { stat } from 'fs';
 
 async function apiCall(token, method, url, query=null, body=null) {
     return await axios.request({
-        baseURL: process.env.API_URL,
+        baseURL: window.ConduktorConfig ? window.ConduktorConfig.API_URL : process.env.API_URL,
         timeout: 2000,
         method: method,
         url: url,
