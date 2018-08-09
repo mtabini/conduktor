@@ -4,6 +4,7 @@ import logging
 import os
 import tornado.ioloop
 import tornado.web
+import tornado.wsgi
 
 from tornado.options import options
 from tornado.platform.asyncio import AnyThreadEventLoopPolicy
