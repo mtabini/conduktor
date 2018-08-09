@@ -1,4 +1,5 @@
 cd client
+source "$JENKINS_HOME/.jj-lib/nvm.bash"
 npm install
 npm run build
 cd ..
