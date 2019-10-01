@@ -23,8 +23,8 @@ class URL(BaseModel):
         if not isinstance(field, str):
             raise AssertionError('The `slug` field must be a string')
 
-        if not re.match(r'^[a-z0-9][a-z0-9\-_]{3,}$', field):
-            raise AssertionError('The `slug` field must be at least 4 characters long, start with a letter or noumber, and can only contain letters, numbers, underscores, and dashes.')
+        if not re.match(r'^[a-z0-9][a-z0-9\-_]{2,}$', field):
+            raise AssertionError('The `slug` field must be at least 3 characters long, start with a letter or noumber, and can only contain letters, numbers, underscores, and dashes.')
 
         return field.lower()
 
