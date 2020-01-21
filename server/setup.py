@@ -20,7 +20,7 @@ setup(
         'tornado>=5.1,<6',
         'sqlalchemy>=1.2.10,<1.3',
         'psycopg2>=2.7.5,<3',
-        'validators==0.12.2',
+        'validators==0.12.6',
         'alembic>=1',
         'requests>=2.19.1',
         'google-auth>=1.5',
